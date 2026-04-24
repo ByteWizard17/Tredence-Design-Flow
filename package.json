@@ -1,0 +1,40 @@
+{
+  "name": "tredence-hr-workflow-designer",
+  "version": "1.0.0",
+  "description": "A mini HR Workflow Designer module for creating and testing internal workflows.",
+  "main": "src/main.tsx",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "test": "jest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "axios": "^0.21.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "reactflow": "^11.11.4",
+    "tailwindcss": "^2.2.19"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.9.36",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.2.0",
+    "eslint": "^7.32.0",
+    "jest": "^27.0.6",
+    "msw": "^0.35.0",
+    "typescript": "^5.6.3",
+    "vite": "^5.0.0"
+  },
+  "keywords": [
+    "react",
+    "workflow",
+    "designer",
+    "hr",
+    "frontend"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}
