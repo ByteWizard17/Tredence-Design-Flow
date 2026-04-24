@@ -1,4 +1,5 @@
-import { rest } from 'msw';
+import * as msw from 'msw';
+const { rest } = (msw as any);
 import { SimulateResponse } from '../types/api';
 import { WorkflowSnapshot } from '../types/nodes';
 import { getTopologicalExecutionOrder } from '../utils/graph';
@@ -10,8 +11,8 @@ const automations = [
 ];
 
 export const handlers = [
-  rest.get('/automations', (_req, res, ctx) => res(ctx.delay(200), ctx.json(automations))),
-  rest.post('/simulate', async (req, res, ctx) => {
+  rest.get('/automations', (_req: any, res: any, ctx: any) => res(ctx.delay(200), ctx.json(automations))),
+  rest.post('/simulate', async (req: any, res: any, ctx: any) => {
     const workflow = req.body as WorkflowSnapshot;
     const orderedNodes = getTopologicalExecutionOrder(workflow.nodes, workflow.edges);
 
