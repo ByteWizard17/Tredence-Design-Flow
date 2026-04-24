@@ -1,12 +1,13 @@
 import React, { useMemo, useState } from 'react';
 import { simulateWorkflow } from '../api/simulate';
 import { SimulationStep } from '../types/api';
-import { serializeWorkflow } from '../utils/graph';
-import { validateWorkflow } from '../utils/validation';
 import { useWorkflowStore } from '../store/useWorkflowStore';
+import { serializeWorkflow } from '../utils/graph';
+import { createSampleWorkflow } from '../utils/sampleWorkflow';
+import { validateWorkflow } from '../utils/validation';
 
 const SandboxPanel: React.FC = () => {
-  const { nodes, edges } = useWorkflowStore();
+  const { nodes, edges, setNodes, setEdges, setSelectedNodeId } = useWorkflowStore();
   const [executionLog, setExecutionLog] = useState<SimulationStep[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
@@ -35,6 +36,15 @@ const SandboxPanel: React.FC = () => {
     }
   };
 
+  const loadSampleWorkflow = () => {
+    const sampleWorkflow = createSampleWorkflow();
+    setNodes(sampleWorkflow.nodes);
+    setEdges(sampleWorkflow.edges);
+    setSelectedNodeId(null);
+    setExecutionLog([]);
+    setApiError(null);
+  };
+
   return (
     <section className="panel-card">
       <div className="panel-header">
@@ -57,9 +67,14 @@ const SandboxPanel: React.FC = () => {
           </div>
         </div>
 
-        <button className="primary-button" onClick={handleSimulate} type="button" disabled={isRunning}>
-          {isRunning ? 'Running simulation...' : 'Simulate workflow'}
-        </button>
+        <div className="button-row">
+          <button className="primary-button" onClick={handleSimulate} type="button" disabled={isRunning}>
+            {isRunning ? 'Running simulation...' : 'Simulate workflow'}
+          </button>
+          <button className="secondary-button" onClick={loadSampleWorkflow} type="button">
+            Load sample tasks
+          </button>
+        </div>
 
         {!validation.valid ? (
           <div className="validation-card">

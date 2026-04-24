@@ -195,6 +195,12 @@ button {
   margin-top: 20px;
 }
 
+.button-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 .form-grid {
   display: grid;
   gap: 12px;
