@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { getAutomations } from '../api/automations';
-import { AutomationAction } from '../types/api';
+import React from 'react';
+import { useAutomations } from '../hooks/useAutomations';
 import {
   ApprovalNodeData,
   AutomatedNodeData,
@@ -57,48 +56,10 @@ const KeyValueEditor = ({
   </div>
 );
 
-const NodeFormPanel = () => {
+  const NodeFormPanel = () => {
   const selectedNode = useSelectedNode();
   const { updateNodeData, deleteNode, setSelectedNodeId } = useWorkflowStore();
-  const [automations, setAutomations] = useState<AutomationAction[]>([]);
-  const [isLoadingAutomations, setIsLoadingAutomations] = useState(false);
-
-  useEffect(() => {
-    let active = true;
-
-    const loadAutomations = async () => {
-      setIsLoadingAutomations(true);
-
-      try {
-        const data = await getAutomations();
-        if (active) {
-          setAutomations(data);
-        }
-      } catch (_error) {
-        if (active) {
-          setAutomations([]);
-        }
-      } finally {
-        if (active) {
-          setIsLoadingAutomations(false);
-        }
-      }
-    };
-
-    loadAutomations();
-
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  const selectedAutomation = useMemo(() => {
-    if (!selectedNode || selectedNode.type !== 'automated') {
-      return null;
-    }
-
-    return automations.find((automation) => automation.id === (selectedNode.data as AutomatedNodeData).actionId) ?? null;
-  }, [automations, selectedNode]);
+  const { automations, isLoadingAutomations, selectedAutomation } = useAutomations(selectedNode);
 
   if (!selectedNode) {
     return (

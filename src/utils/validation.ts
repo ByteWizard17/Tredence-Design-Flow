@@ -87,6 +87,17 @@ export const validateWorkflow = (nodes: WorkflowNode[], edges: WorkflowEdge[]): 
   }
 
   startNodes.forEach((node) => {
+    const nonStartNodes = nodes.filter((candidate) => candidate.id !== node.id);
+    const earliestNodeX = nonStartNodes.length > 0 ? Math.min(...nonStartNodes.map((candidate) => candidate.position.x)) : node.position.x;
+
+    if (node.position.x > earliestNodeX) {
+      issues.push({
+        code: 'START_NOT_FIRST',
+        message: 'Start node must be the first step on the canvas.',
+        nodeIds: [node.id],
+      });
+    }
+
     if ((incoming.get(node.id) ?? []).length > 0) {
       issues.push({
         code: 'START_HAS_INPUT',

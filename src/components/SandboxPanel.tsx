@@ -1,48 +1,24 @@
-import React, { useMemo, useState } from 'react';
-import { simulateWorkflow } from '../api/simulate';
-import { SimulationStep } from '../types/api';
+import React from 'react';
+import { useSampleWorkflow } from '../hooks/useSampleWorkflow';
+import { useWorkflowSimulation } from '../hooks/useWorkflowSimulation';
 import { useWorkflowStore } from '../store/useWorkflowStore';
-import { serializeWorkflow } from '../utils/graph';
-import { createSampleWorkflow } from '../utils/sampleWorkflow';
-import { validateWorkflow } from '../utils/validation';
 
 const SandboxPanel: React.FC = () => {
-  const { nodes, edges, setNodes, setEdges, setSelectedNodeId } = useWorkflowStore();
-  const [executionLog, setExecutionLog] = useState<SimulationStep[]>([]);
-  const [isRunning, setIsRunning] = useState(false);
-  const [apiError, setApiError] = useState<string | null>(null);
+  const { nodes, edges } = useWorkflowStore();
+  const { loadSampleWorkflow } = useSampleWorkflow();
+  const {
+    executionLog,
+    isRunning,
+    apiError,
+    serializedWorkflow,
+    validation,
+    runSimulation,
+    resetSimulationState,
+  } = useWorkflowSimulation(nodes, edges);
 
-  const serializedWorkflow = useMemo(() => serializeWorkflow(nodes, edges), [nodes, edges]);
-  const validation = useMemo(() => validateWorkflow(nodes, edges), [nodes, edges]);
-
-  const handleSimulate = async () => {
-    if (!validation.valid) {
-      setExecutionLog([]);
-      setApiError(null);
-      return;
-    }
-
-    setIsRunning(true);
-    setApiError(null);
-
-    try {
-      const result = await simulateWorkflow(serializedWorkflow);
-      setExecutionLog(result);
-    } catch (_error) {
-      setExecutionLog([]);
-      setApiError('Simulation request failed. Please retry.');
-    } finally {
-      setIsRunning(false);
-    }
-  };
-
-  const loadSampleWorkflow = () => {
-    const sampleWorkflow = createSampleWorkflow();
-    setNodes(sampleWorkflow.nodes);
-    setEdges(sampleWorkflow.edges);
-    setSelectedNodeId(null);
-    setExecutionLog([]);
-    setApiError(null);
+  const handleReloadSample = () => {
+    loadSampleWorkflow();
+    resetSimulationState();
   };
 
   return (
@@ -68,10 +44,10 @@ const SandboxPanel: React.FC = () => {
         </div>
 
         <div className="button-row">
-          <button className="primary-button" onClick={handleSimulate} type="button" disabled={isRunning}>
+          <button className="primary-button" onClick={runSimulation} type="button" disabled={isRunning}>
             {isRunning ? 'Running simulation...' : 'Simulate workflow'}
           </button>
-          <button className="secondary-button" onClick={loadSampleWorkflow} type="button">
+          <button className="secondary-button" onClick={handleReloadSample} type="button">
             Load sample tasks
           </button>
         </div>

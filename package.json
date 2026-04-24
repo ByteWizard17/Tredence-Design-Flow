@@ -36,5 +36,8 @@
     "frontend"
   ],
   "author": "Your Name",
-  "license": "MIT"
+  "license": "MIT",
+  "msw": {
+    "workerDirectory": "public"
+  }
 }

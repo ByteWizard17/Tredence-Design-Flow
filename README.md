@@ -22,6 +22,10 @@ Key folders:
   - `NodeFormPanel.tsx`: dynamic configuration UI for each node type
   - `SandboxPanel.tsx`: validation + simulation sandbox
   - `nodes/*`: custom node renderers
+- `src/hooks`
+  - `useAutomations.ts`: automation catalog loading + selected action lookup
+  - `useWorkflowSimulation.ts`: serialization, validation, and simulation orchestration
+  - `useSampleWorkflow.ts`: sample workflow bootstrapping/reset behavior
 - `src/store`
   - `useWorkflowStore.ts`: Zustand store for nodes, edges, selection, and mutations
 - `src/api`
@@ -39,7 +43,8 @@ Key folders:
 - Used a typed node-data model to make adding future node types straightforward.
 - Separated rendering, data fetching, validation, and graph utilities to keep the prototype extensible.
 - Used MSW instead of a real backend so the mock API behaves like production network calls without persistence overhead.
-- Added stronger validation than the minimum requirement: start/end constraints, disconnected steps, and cycle detection.
+- Added reusable hooks for data loading and sandbox behavior so the workflow builder logic stays modular.
+- Added stronger validation than the minimum requirement: start/end constraints, disconnected steps, cycle detection, and enforcing the Start node as the first canvas step.
 
 ## How to run
 
